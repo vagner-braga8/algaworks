@@ -1,11 +1,11 @@
-package com.algaworks.di;
+package com.algaworks.di.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.algaworks.di.modelo.Cliente;
-import com.algaworks.di.modelo.service.AtivacaoClienteService;
+import com.algaworks.di.service.AtivacaoClienteService;
 
 @Controller
 public class MeuPrimeiroController {

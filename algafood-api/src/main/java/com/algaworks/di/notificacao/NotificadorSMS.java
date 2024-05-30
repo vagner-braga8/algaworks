@@ -1,4 +1,4 @@
-package com.algaworks.di.modelo.notificacao;
+package com.algaworks.di.notificacao;
 
 import org.springframework.stereotype.Component;
 

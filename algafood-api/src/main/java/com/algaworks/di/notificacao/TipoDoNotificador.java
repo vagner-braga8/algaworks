@@ -1,4 +1,4 @@
-package com.algaworks.di.modelo.notificacao;
+package com.algaworks.di.notificacao;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
