@@ -5,14 +5,10 @@ import org.springframework.stereotype.Component;
 
 import com.algaworks.di.modelo.Cliente;
 
-@Profile("dev") //Simulando que esse container spring rodaria apenas em ambiente de 'Desenvolvimento'
+@Profile("dev")
 @TipoDoNotificador(NivelUrgencia.NORMAL)
 @Component
 public class NotificadorEmailMock implements Notificador {
-	
-	public NotificadorEmailMock() {
-		System.out.println("NotificadorEmail de MOCK");
-	}
 
 	@Override
 	public void notificar(Cliente cliente, String mensagem) {
