@@ -1,13 +1,11 @@
 package com.algaworks.di.modelo.notificacao;
 
-import org.springframework.context.annotation.Primary;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.algaworks.di.modelo.Cliente;
 
-/*Quando houver mais de um bean desse tipo, com a anotação 'Primary' estamos afirmando que
-tal bean será prioritário*/
-@Primary
+@Qualifier("normal") //Equivalente ao 'grau' de urgência por exemplo
 @Component
 public class NotificadorEmail implements Notificador {
 
