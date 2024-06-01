@@ -29,4 +29,17 @@ public class CadastroCozinha {
 	public Cozinha salvar(Cozinha cozinha) {
 		return manager.merge(cozinha);
 	}
+	
+	@Transactional
+	public void remover (Cozinha cozinha) {
+		/*
+		 * Estados de uma entidade
+		 * 
+		 * Para fazer o remove, precisa fazer com que a instância passe para o estado
+		 * 'Managed' (Instância gerenciada pelo contexto de persistência JPA)
+		 */
+		cozinha = buscar(cozinha.getId());
+		manager.remove(cozinha);
+	}
+	
 }
