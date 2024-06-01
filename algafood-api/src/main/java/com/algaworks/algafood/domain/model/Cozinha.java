@@ -2,14 +2,11 @@ package com.algaworks.algafood.domain.model;
 
 import java.util.Objects;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 
-@Table(name = "tab_cozinhas")
 @Entity
 public class Cozinha {
 	
@@ -17,7 +14,6 @@ public class Cozinha {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Long id;
 	
-	@Column(name = "nm_cozinha")
 	private String nome;
 	
 

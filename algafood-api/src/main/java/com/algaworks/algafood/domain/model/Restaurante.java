@@ -8,9 +8,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 
-@Table(name = "tab_restaurantes")
 @Entity
 public class Restaurante {
 
@@ -18,7 +16,6 @@ public class Restaurante {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Long id;
 	
-	@Column(name = "nm_restaurante")
 	private String nome;
 	
 	@Column(name = "taxa_frete")
