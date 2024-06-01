@@ -3,6 +3,7 @@ package com.algaworks.algafood.jpa;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.algaworks.algafood.domain.model.Cozinha;
 
@@ -16,12 +17,11 @@ public class CadastroCozinha {
 	private EntityManager manager;
 	
 	public List<Cozinha> listar(){
-		 //Primeiro arg:JPQL *linguagem de consulta da JPA
-			/*
-			 * TypedQuery<Cozinha> query = manager.createQuery("from Cozinha",
-			 * Cozinha.class); return query.getResultList();
-			 */
 		return manager.createQuery("from Cozinha", Cozinha.class).getResultList();
 	}
 	
+	@Transactional
+	public Cozinha adicionar(Cozinha cozinha) {
+		return manager.merge(cozinha);
+	}
 }
