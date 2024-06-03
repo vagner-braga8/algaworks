@@ -3,6 +3,7 @@ package com.algaworks.algafood.api.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,11 +35,13 @@ public class CozinhaController {
 		return new CozinhasXmlWrapper(cozinhaRepository.buscarTodas());
 	}
 	
-	//ResponseEntity : Permite 'customizar' a resposta HTTP
 	@GetMapping("/{id}")
 	public ResponseEntity<Cozinha> buscarPorId(@PathVariable Long id) {
 		Cozinha cozinha = cozinhaRepository.buscarPorId(id);
-		//return ResponseEntity.status(HttpStatus.OK).body();
-		return ResponseEntity.ok(cozinha);
+		if(cozinha != null) {
+			return ResponseEntity.ok(cozinha);
+		}
+		//return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		return ResponseEntity.notFound().build();
 	}
 }
