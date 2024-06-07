@@ -1,6 +1,7 @@
 package com.algaworks.algafood.api.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,35 +35,35 @@ public class CozinhaController {
 
 	@GetMapping
 	public List<Cozinha> listar() {
-		return cozinhaRepository.buscarTodas();
+		return cozinhaRepository.findAll();
 	}
 
-	@GetMapping("/{id}")
-	public ResponseEntity<Cozinha> buscarPorId(@PathVariable Long id) {
-		Cozinha cozinha = cozinhaRepository.buscarPorId(id);
-		if (cozinha != null) {
-			return ResponseEntity.ok(cozinha);
-		}
-		return ResponseEntity.notFound().build();
-	}
+	 @GetMapping("/{id}")
+	 public ResponseEntity<Cozinha> buscarPorId(@PathVariable Long id) {
+	     Optional<Cozinha> cozinha = cozinhaRepository.findById(id);
+	     if (cozinha.isPresent()) {
+	         return ResponseEntity.ok(cozinha.get());
+	     }
+	     return ResponseEntity.notFound().build();
+	 }
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public Cozinha adicionar(@RequestBody Cozinha cozinha) {
 		return cadastroCozinhaService.salvar(cozinha);
 	}
-
-	@PutMapping("/{id}")
-	public ResponseEntity<Cozinha> atualizar(@PathVariable Long id, @RequestBody Cozinha cozinha) {
-		Cozinha cozinhaAtual = cozinhaRepository.buscarPorId(id);
-		if (cozinhaAtual != null) {
-			BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
-			cozinhaAtual = cadastroCozinhaService.salvar(cozinhaAtual);
-			return ResponseEntity.ok(cozinhaAtual);
-		}
-		return ResponseEntity.notFound().build();
-	}
-
+	
+	 @PutMapping("/{id}")
+	    public ResponseEntity<Cozinha> atualizar(@PathVariable Long id, @RequestBody Cozinha cozinha) {
+	        Optional<Cozinha> cozinhaAtual = cozinhaRepository.findById(id);
+	        if (cozinhaAtual.isPresent()) {
+	            BeanUtils.copyProperties(cozinha, cozinhaAtual.get(), "id");
+	            Cozinha cozinhaSalva = cadastroCozinhaService.salvar(cozinhaAtual.get());
+	            return ResponseEntity.ok(cozinhaSalva);
+	        }
+	        return ResponseEntity.notFound().build();
+	    }
+	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Cozinha> remover(@PathVariable Long id) {
 		try {
@@ -75,6 +76,5 @@ public class CozinhaController {
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		}
 	}
-	
 	
 }
