@@ -66,7 +66,7 @@ public class CozinhaController {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Cozinha> remover(@PathVariable Long id) {
 		try {
-			cadastroCozinhaService.excluir(id);
+			cadastroCozinhaService.remover(id);
 			return ResponseEntity.noContent().build();
 		} catch (EntidadeNaoEncontradaException e) {
 			return ResponseEntity.notFound().build();
@@ -75,5 +75,6 @@ public class CozinhaController {
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		}
 	}
+	
 
 }

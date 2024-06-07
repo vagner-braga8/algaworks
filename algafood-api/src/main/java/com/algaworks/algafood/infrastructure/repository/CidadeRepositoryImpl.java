@@ -2,6 +2,7 @@ package com.algaworks.algafood.infrastructure.repository;
 
 import java.util.List;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,33 +13,35 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
 @Component
-public class CidadeRepositoryImpl implements CidadeRepository{
-	
+public class CidadeRepositoryImpl implements CidadeRepository {
+
 	@PersistenceContext
 	private EntityManager manager;
-	
+
 	@Override
-	public List<Cidade> buscarTodas(){
+	public List<Cidade> buscarTodas() {
 		return manager.createQuery("from Cidade", Cidade.class).getResultList();
 	}
-	
+
 	@Override
 	public Cidade buscarPorId(Long id) {
 		return manager.find(Cidade.class, id);
 	}
-	
+
 	@Transactional
 	@Override
-	public Cidade adicionar(Cidade cidade) {
+	public Cidade salvar(Cidade cidade) {
 		return manager.merge(cidade);
 	}
-	
+
 	@Transactional
 	@Override
-	public void remover (Cidade cidade) {
-		cidade = buscarPorId(cidade.getId());
+	public void remover(Long id) {
+		Cidade cidade = buscarPorId(id);
+		if (cidade == null) {
+			throw new EmptyResultDataAccessException(1);
+		}
 		manager.remove(cidade);
 	}
-	
-	
+
 }
