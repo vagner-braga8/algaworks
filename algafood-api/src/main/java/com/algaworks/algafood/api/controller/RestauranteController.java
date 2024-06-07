@@ -3,12 +3,16 @@ package com.algaworks.algafood.api.controller;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ReflectionUtils;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.model.Cidade;
 import com.algaworks.algafood.domain.model.Restaurante;
@@ -33,15 +38,15 @@ public class RestauranteController {
 	private CadastroRestauranteService cadastroRestauranteService;
 
 	@GetMapping
-	public List<Restaurante> buscarTodos() {
+	public List<Restaurante> listar() {
 		return cadastroRestauranteService.buscarTodos();
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<Restaurante> buscarPorId(@PathVariable Long id) {
-		Restaurante restaurante = cadastroRestauranteService.buscarPorId(id);
-		if (restaurante != null) {
-			return ResponseEntity.ok(restaurante);
+		Optional<Restaurante> restaurante = cadastroRestauranteService.buscarPorId(id);
+		if (restaurante.isPresent()) {
+			return ResponseEntity.ok(restaurante.get());
 		}
 		return ResponseEntity.notFound().build();
 	}
@@ -60,8 +65,9 @@ public class RestauranteController {
 
 	@PutMapping("/{id}")
 	public ResponseEntity<Restaurante> atualizar(@PathVariable Long id, @RequestBody Restaurante restaurante) {
-		Restaurante restauranteAtual = cadastroRestauranteService.buscarPorId(id);
-		if (restauranteAtual != null) {
+		Optional<Restaurante> restauranteAtualOpt = cadastroRestauranteService.buscarPorId(id);
+		if (restauranteAtualOpt.isPresent()) {
+			Restaurante restauranteAtual = restauranteAtualOpt.get();
 			BeanUtils.copyProperties(restaurante, restauranteAtual, "id");
 			restauranteAtual = cadastroRestauranteService.salvar(restauranteAtual);
 			return ResponseEntity.ok(restauranteAtual);
@@ -71,37 +77,41 @@ public class RestauranteController {
 
 	@PatchMapping("/{id}")
 	public ResponseEntity<?> atualizarParcial(@PathVariable Long id, @RequestBody Map<String, Object> campos) {
-		Restaurante restauranteAtual = cadastroRestauranteService.buscarPorId(id);
+		Optional<Restaurante> restauranteAtual = cadastroRestauranteService.buscarPorId(id);
 
-		if (restauranteAtual == null) {
+		if (!restauranteAtual.isPresent()) {
 			return ResponseEntity.notFound().build();
 		}
 
-		merge(campos, restauranteAtual);
+		merge(campos, restauranteAtual.get());
 
-		return atualizar(id, restauranteAtual);
+		return atualizar(id, restauranteAtual.get());
 	}
 
 	private void merge(Map<String, Object> dadosOrigem, Restaurante restauranteDestino) {
-		// Cria uma instância de ObjectMapper. Que é usada para manipular e converter objetos Java em JSON e vice-versa.
 		ObjectMapper objectMapper = new ObjectMapper();
 
-		// Converte o mapa dadosOrigem em um objeto do tipo Restaurante.
 		Restaurante restauranteOrigem = objectMapper.convertValue(dadosOrigem, Restaurante.class);
 
 		dadosOrigem.forEach((nomePropriedade, valorPropriedade) -> {
-
-			// Usa a reflexão para encontrar o campo (field) na classe Restaurante que corresponde ao nome da propriedade.
 			Field field = ReflectionUtils.findField(Restaurante.class, nomePropriedade);
-
-			// Torna o campo acessível, permitindo que ele possa ser modificado mesmo que seja privado.
 			field.setAccessible(true);
-
 			Object novoValor = ReflectionUtils.getField(field, restauranteOrigem);
-			
-			// Usa a reflexão para definir o valor do campo encontrado (field) no objeto
 			ReflectionUtils.setField(field, restauranteDestino, novoValor);
 		});
+	}
+	
+	@DeleteMapping("/{id}")
+	public void remover(@PathVariable Long id) {
+		try {
+			cadastroRestauranteService.remover(id);
+		} catch (EmptyResultDataAccessException e) {
+			throw new EntidadeNaoEncontradaException(String.format("Não existe um restaurante com o código %d", id));
+
+		} catch (DataIntegrityViolationException e) {
+			throw new EntidadeEmUsoException(
+					String.format("Restaurante de código %d não pode ser removida. Pois, está em uso.", id));
+		}
 	}
 
 }
