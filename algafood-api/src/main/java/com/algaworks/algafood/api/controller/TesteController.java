@@ -13,6 +13,7 @@ import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.repository.CozinhaRepository;
 import com.algaworks.algafood.domain.repository.RestauranteRepository;
+import com.algaworks.algafood.infrastructure.repository.RestauranteRepositoryImpl;
 
 @RestController
 @RequestMapping("/teste")
@@ -41,8 +42,6 @@ public class TesteController {
 	
 	@GetMapping("/restaurantes/por-nome-cozinha")
 	public List<Restaurante> restaurantesPorTaxaFrete(String nome, Long cozinhaId){
-		//return restauranteRepository.findByNomeContainingAndCozinhaId(nome, cozinhaId);
-		System.out.println("teste 2");
 		return restauranteRepository.consultarPorNome(nome, cozinhaId);
 	}
 	
@@ -61,5 +60,9 @@ public class TesteController {
 		return restauranteRepository.countByCozinhaId(cozinhaId);
 	}
 	
+	@GetMapping("/restaurantes/por-nome-e-frete")
+	public List<Restaurante> restaurantesPorNomeFrete(String nome, BigDecimal taxaFreteInicial, BigDecimal taxaFreteFinal ){
+		return restauranteRepository.find(nome, taxaFreteInicial, taxaFreteFinal );
+	}
 	
 }
