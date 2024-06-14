@@ -1,6 +1,7 @@
 package com.algaworks.algafood.infrastructure.repository;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,16 +34,21 @@ public class RestauranteRepositoryImpl implements RestauranteRepositoryQueries {
 		
 		Root<Restaurante> root = criteria.from(Restaurante.class);
 		
-		Predicate nomePredicate = builder.like(root.get("nome"), "%" + nome + "%" );
+		var predicates = new ArrayList<Predicate>();
 		
-		//greaterThanOrEqualTo '>='
-		Predicate taxaFreteInicialPredicate = builder.greaterThanOrEqualTo(root.get("taxaFrete"), taxaFreteInicial);
+		if(StringUtils.hasText(nome)) {
+			predicates.add(builder.like(root.get("nome"), "%" + nome + "%" ));
+		}
 		
-		//lessThanOrEqualTo  '<='
-		Predicate taxaFreteFinalPredicate = builder.lessThanOrEqualTo(root.get("taxaFrete"), taxaFreteFinal);
+		if(taxaFreteInicial != null) { 
+			predicates.add(builder.greaterThanOrEqualTo(root.get("taxaFrete"), taxaFreteInicial));
+		}
 		
-		criteria.where(nomePredicate, taxaFreteInicialPredicate, taxaFreteFinalPredicate );
+		if(taxaFreteFinal != null) { 
+			predicates.add(builder.lessThanOrEqualTo(root.get("taxaFrete"), taxaFreteFinal));
+		}
 		
+		criteria.where(predicates.toArray(new Predicate[0]));
 		
 		TypedQuery<Restaurante> query = entityManager.createQuery(criteria);
 		return query.getResultList();
