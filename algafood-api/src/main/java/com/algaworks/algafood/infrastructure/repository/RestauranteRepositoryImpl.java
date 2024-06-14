@@ -6,11 +6,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 import com.algaworks.algafood.domain.model.Restaurante;
+import com.algaworks.algafood.domain.repository.RestauranteRepository;
 import com.algaworks.algafood.domain.repository.RestauranteRepositoryQueries;
+import com.algaworks.algafood.infrastructure.repository.spec.RestauranteSpecs;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -25,6 +30,10 @@ public class RestauranteRepositoryImpl implements RestauranteRepositoryQueries {
 	
 	@PersistenceContext
 	private EntityManager entityManager;
+	
+	//Lazy só instancia no momento que é necessário para evitar dependência circular
+	@Autowired @Lazy
+	private RestauranteRepository restauranteRepository;
 	
 	@Override
 	public List<Restaurante> find(String nome, BigDecimal taxaFreteInicial, BigDecimal taxaFreteFinal){
@@ -52,6 +61,16 @@ public class RestauranteRepositoryImpl implements RestauranteRepositoryQueries {
 		
 		TypedQuery<Restaurante> query = entityManager.createQuery(criteria);
 		return query.getResultList();
+	}
+
+	@Override
+	public List<Restaurante> findComFreteGratis(String nome) {
+		Specification<Restaurante> spec = RestauranteSpecs.comFreteGratis();
+		  
+	    if (nome != null && !nome.isEmpty()) {
+	        spec = spec.and(RestauranteSpecs.comNomeSemelhante(nome));
+	    }
+	    return restauranteRepository.findAll(spec);
 	}
 	
 }
