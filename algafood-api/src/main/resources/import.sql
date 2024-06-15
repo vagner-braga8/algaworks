@@ -23,3 +23,7 @@ INSERT INTO forma_pagamento (nome) VALUES ('Dinheiro');
 
 INSERT INTO permissao (nome, descricao) VALUES ('Consultar Produtos', 'Permite a consulta de produtos.');
 
+INSERT INTO restaurante_forma_pagamento (restaurante_id, forma_pagamento_id) VALUES (1, 1), (1, 3), (2, 1), (2, 2), (2, 5), (3, 1), (3, 4), (3, 6);
+
+
+

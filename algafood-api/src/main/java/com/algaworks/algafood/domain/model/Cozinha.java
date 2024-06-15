@@ -26,13 +26,7 @@ public class Cozinha {
 	
 	@Column(nullable = false)
 	private String nome;
-
-	/*
-	 * JsonIgnore : Não serialize a entidade 'Restaurante' quando for serializar a entidade 'Cozinha' 
-	 * OneToMany : Uma cozinha para muitos restaurantes,
-	 * mappedBy: "cozinha" : Que foi mapeado por cozinha,
-	 * Onde? : List<Restaurante> , em Restaurante.
-	 */
+	
 	@JsonIgnore
 	@OneToMany(mappedBy = "cozinha")
 	private List<Restaurante> restaurantes = new ArrayList<>();
