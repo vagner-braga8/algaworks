@@ -1,6 +1,8 @@
 insert into cozinha (nome) values ('Tailandesa');
 insert into cozinha (nome) values ('Indiana');
 insert into cozinha (nome) values ('Japonesa');
+insert into cozinha (nome) values ('Argentina');
+insert into cozinha (nome) values ('Brasileira');
 
 insert into estado (nome) values ('Rio Grande do Sul');
 insert into estado (nome) values ('Santa Catarina');
@@ -24,6 +26,14 @@ INSERT INTO forma_pagamento (nome) VALUES ('Dinheiro');
 INSERT INTO permissao (nome, descricao) VALUES ('Consultar Produtos', 'Permite a consulta de produtos.');
 
 INSERT INTO restaurante_forma_pagamento (restaurante_id, forma_pagamento_id) VALUES (1, 1), (1, 3), (2, 1), (2, 2), (2, 5), (3, 1), (3, 4), (3, 6);
+
+insert into produto (nome, descricao, preco, ativo, restaurante_id) values ('Sushi de Salmão', 'Delicioso sushi de salmão fresco', 15.00, true, 3);
+insert into produto (nome, descricao, preco, ativo, restaurante_id) values ('Curry de Frango', 'Frango ao molho curry com arroz basmati', 20.00, true, 2);
+insert into produto (nome, descricao, preco, ativo, restaurante_id) values ('Pad Thai', 'Macarrão de arroz frito com camarão', 18.00, true, 1);
+insert into produto (nome, descricao, preco, ativo, restaurante_id) values ('Bife de Chorizo', 'Bife de chorizo grelhado', 30.00, true, 1);
+insert into produto (nome, descricao, preco, ativo, restaurante_id) values ('Empanadas', 'Empanadas argentinas', 10.00, true, 1);
+insert into produto (nome, descricao, preco, ativo, restaurante_id) values ('Feijoada', 'Feijoada completa com arroz, farofa e couve', 25.00, true, 2);
+insert into produto (nome, descricao, preco, ativo, restaurante_id) values ('Moqueca de Peixe', 'Moqueca de peixe com pirão e arroz', 28.00, true, 3);
 
 
 
