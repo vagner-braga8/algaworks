@@ -36,7 +36,8 @@ public class Restaurante {
 	@JoinColumn(nullable = false)
 	private Cozinha cozinha;
 	
-	@Embedded //A propriede 'endereco' é uma parte da entidade Restaurante
+	@JsonIgnore
+	@Embedded
 	private Endereco endereco;
 	
 	@JsonIgnore

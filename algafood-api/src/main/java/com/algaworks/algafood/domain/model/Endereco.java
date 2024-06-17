@@ -7,13 +7,8 @@ import jakarta.persistence.ManyToOne;
 import lombok.Data;
 
 @Data
-@Embeddable   //Parte de alguma outra entidade que a 'incorpora-la'
+@Embeddable
 public class Endereco {
-	
-	/*
-	 * O prefixo iniciando pelo nome da classe (endereco_) é uma boa prática para quando ela for
-	 * incorporada por alguma entidade, houver distinção no nome das colunas.
-	 */
 	
 	@Column(name="endereco_cep")
 	private String cep;
